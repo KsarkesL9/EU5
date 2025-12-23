@@ -5,7 +5,7 @@
 	potential = {
 	}
 
-	ai_tick = month
+	ai_tick = monthly
 	ai_tick_frequency = 3
 
 	allow = {
@@ -230,6 +230,11 @@ mil_order_request_funds = {
 				value = 10
 			}
 		}
+	}
+
+	cooldown = {
+		type = mil_order_request_funds
+		years = 1
 	}
 	
 	effect = {

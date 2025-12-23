@@ -1,6 +1,6 @@
 ﻿reformation = {
 	monthly_spawn_chance = monthly_spawn_chance_high
-	
+	hint_tag = hint_reformation
 	can_start = {
 		current_year >= 1510
 	}
@@ -120,39 +120,38 @@
 	}
 
 	on_monthly = {
-		every_location_in_the_world = {
-			limit = {
-				OR = {
-					has_building = building_type:lutheran_preachers
-					dominant_religion ?= religion:lutheran
+		continent:europe = {
+			every_location_in_continent = {
+				limit = {
+					OR = {
+						has_building = building_type:lutheran_preachers
+						dominant_religion ?= religion:lutheran
+					}
 				}
-			}
-			
-			every_coast_border_location = {
-					limit = {
-						population > 0
-						dominant_religion = religion:catholic
-						OR = {
-							NOT = { has_building = building_type:lutheran_preachers }
-							any_buildings_in_location = {
-								building_type = building_type:lutheran_preachers
-								is_max_level = no
+				
+				every_coast_border_location = {
+						limit = {
+							population > 0
+							dominant_religion = religion:catholic
+							OR = {
+								NOT = { has_building = building_type:lutheran_preachers }
+								"building(building_type:lutheran_preachers|owner)" ?= { is_at_max_level = no }
+							}
+							NOT = { has_variable = lutherans_blocked_in_location }
+						}
+				
+					random_list =  {
+						3 = {
+							construct_building = { building_type = building_type:lutheran_preachers }
+						}
+						2 = {
+							set_variable = {
+								name = lutherans_blocked_in_location 
+								value = 1
 							}
 						}
-						NOT = { has_variable = lutherans_blocked_in_location }
+						20 = {  }
 					}
-			
-				random_list =  {
-					3 = {
-						construct_building = { building_type = building_type:lutheran_preachers }
-					}
-					2 = {
-						set_variable = {
-							name = lutherans_blocked_in_location 
-							value = 1
-						}
-					}
-					20 = {  }
 				}
 			}
 		}
@@ -163,7 +162,8 @@
 			limit = {
 				religion = religion:catholic
 				has_embraced_institution = institution:printing_press
-				NOT = { has_variable = bibles_translated_in_country }
+				NOT = { has_variable = bibles_translated_in_country }				
+				NOT = { dominant_language = language:latin_language }
 			}
 			
 			set_variable = { 
@@ -505,7 +505,19 @@
 			}
 			custom_tooltip = REFORMATION_LOCAL_ACTIVE_REFORMER
 		}
-		else_if = {
+		if = {
+			limit = {
+				has_building = building_type:lutheran_preachers
+			}
+			custom_tooltip = REFORMATION_HAS_LUTHERAN_PREACHERS
+		}
+		if = {
+			limit = {
+				has_building = building_type:calvinist_preachers
+			}
+			custom_tooltip = REFORMATION_HAS_CALVINIST_PREACHERS
+		}
+		if = {
 			limit = {
 				dominant_religion ?= religion:catholic
 				has_owner = yes
@@ -515,18 +527,7 @@
 			}
 			custom_tooltip = REFORMATION_HAS_JESUITS_ACTIVE
 		}
-		else_if = {
-			limit = {
-				has_building = building_type:lutheran_preachers
-			}
-			custom_tooltip = REFORMATION_HAS_LUTHERAN_PREACHERS
-		}
-		else_if = {
-			limit = {
-				has_building = building_type:calvinist_preachers
-			}
-			custom_tooltip = REFORMATION_HAS_CALVINIST_PREACHERS
-		}
+		custom_tooltip = REFORMATION_LOCATION_RELIGION
 	}
 
 	map_color = {
@@ -537,34 +538,10 @@
 					location ?= prev
 				}
 			}
-			if = {
-				limit = {
-					has_building = building_type:lutheran_preachers
-				}
-				lerp = {
-					min_color = reformation_reformer
-					max_color = color_lutheran
-					factor = 0.5
-				}
-			}
-			else_if = {
-				limit = {
-					has_building = building_type:calvinist_preachers
-				}
-				lerp = {
-					min_color = reformation_reformer
-					max_color = color_calvinist
-					factor = 0.5
-				}
-			}
-			else = {
-				value = reformation_reformer
-			}
+			value = reformation_reformer
 		}
 		else_if = {
-			limit = {
-				dominant_religion ?= religion:catholic
-			}
+			limit = { dominant_religion ?= religion:catholic }
 			if = {
 				limit = {
 					has_owner = yes
@@ -572,54 +549,10 @@
 						has_policy = jesuits_allowed
 					}
 				}
-				if = {
-					limit = {
-						has_building = building_type:lutheran_preachers
-					}
-					lerp = {
-						min_color = reformation_jesuits_state
-						max_color = color_lutheran
-						factor = 0.5
-					}
-				}
-				else_if = {
-					limit = {
-						has_building = building_type:calvinist_preachers
-					}
-					lerp = {
-						min_color = reformation_jesuits_state
-						max_color = color_calvinist
-						factor = 0.5
-					}
-				}
-				else = {
-					value = reformation_jesuits_state
-				}
+				value = reformation_jesuits_state
 			}
 			else = {
-				if = {
-					limit = {
-						has_building = building_type:lutheran_preachers
-					}
-					lerp = {
-						min_color = religion_catholic
-						max_color = color_lutheran
-						factor = 0.5
-					}
-				}
-				else_if = {
-					limit = {
-						has_building = building_type:calvinist_preachers
-					}
-					lerp = {
-						min_color = religion_catholic
-						max_color = color_calvinist
-						factor = 0.5
-					}
-				}
-				else = {
-					value = religion_catholic
-				}
+				value = religion_catholic
 			}
 		}
 		else_if = {
@@ -643,105 +576,54 @@
 		}
 	}
 	
-	legend_key = { 
-		desc = "lutheran_preachers"
-		color = {
-			lerp = {
-				min_color = reformation_reformer
-				max_color = color_lutheran
-				factor = 0.5
+	secondary_map_color = {
+		if = {
+			limit = {
+				has_building = building_type:lutheran_preachers
 			}
+			value = color_lutheran
 		}
-		require_color_on_map = yes
-	}
-	legend_key = { 
-		desc = "calvinist_preachers"
-		color = {
-			lerp = {
-				min_color = reformation_reformer
-				max_color = color_calvinist
-				factor = 0.5
+		else_if = {
+			limit = {
+				has_building = building_type:calvinist_preachers
 			}
+			value = color_calvinist
 		}
-		require_color_on_map = yes
 	}
+	
 	legend_key = { 
-		desc = "lutheran_preachers"
-		color = {
-			lerp = {
-				min_color = reformation_jesuits_state
-				max_color = color_lutheran
-				factor = 0.5
-			}
-		}
-		require_color_on_map = yes
-	}
-	legend_key = { 
-		desc = "calvinist_preachers"
-		color = {
-			lerp = {
-				min_color = reformation_jesuits_state
-				max_color = color_calvinist
-				factor = 0.5
-			}
-		}
-		require_color_on_map = yes
-	}
-	legend_key = { 
-		desc = "lutheran_preachers"
-		color = {
-			lerp = {
-				min_color = religion_catholic
-				max_color = color_lutheran
-				factor = 0.5
-			}
-		}
-		require_color_on_map = yes
-	}
-	legend_key = { 
-		desc = "calvinist_preachers"
-		color = {
-			lerp = {
-				min_color = religion_catholic
-				max_color = color_calvinist
-				factor = 0.5
-			}
-		}
-		require_color_on_map = yes
-	}
-	legend_key = { 
-		desc = "Reformers" #FIX
+		desc = "REFORMER_STATE"
 		color = reformation_reformer
 		require_color_on_map = yes
 	}
 	legend_key = { 
-		desc = "jesuits_allowed"
-		color = reformation_jesuits_state
-		require_color_on_map = yes
-	}
-	legend_key = { 
-		desc = "catholic_ADJ"
-		color = religion_catholic
-		require_color_on_map = yes
-	}
-	legend_key = { 
-		desc = "lutheran_ADJ"
-		color = color_lutheran
-		require_color_on_map = yes
-	}
-	legend_key = { 
-		desc = "calvinist_ADJ"
-		color = color_calvinist
-		require_color_on_map = yes
-	}
-	legend_key = { 
-		desc = "hussite_ADJ"
+		desc = "HUSSITE_STATE"
 		color = color_hussite
 		require_color_on_map = yes
 	}
 	legend_key = { 
-		desc = "anglican_ADJ"
+		desc = "ANGLICAN_STATE"
 		color = color_anglican
+		require_color_on_map = yes
+	}
+	legend_key = { 
+		desc = "LUTHERAN_STATE"
+		color = color_lutheran
+		require_color_on_map = yes
+	}
+	legend_key = { 
+		desc = "CALVINIST_STATE"
+		color = color_calvinist
+		require_color_on_map = yes
+	}
+	legend_key = { 
+		desc = "JESUIT_STATE"
+		color = reformation_jesuits_state
+		require_color_on_map = yes
+	}
+	legend_key = { 
+		desc = "CATHOLIC_STATE"
+		color = religion_catholic
 		require_color_on_map = yes
 	}
 }

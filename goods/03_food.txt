@@ -38,8 +38,8 @@ fur = {
 	food = 2.0
 	
 	demand_add = {
-		nobles = 0.5
-		burghers = 0.05
+		nobles = 0.1
+		burghers = 0.005
 	}
 
 }
@@ -72,11 +72,21 @@ wheat = {
 	default_market_price = 1
 	
 	demand_add = {	
-		all = 0.002
+		all = 0.001
 	}
 	demand_multiply = {
-		upper = 2
+		upper = 2.5
+		slaves = 0
+		tribesmen = 0
 	}
+	
+	wealth_impact_threshold = {
+		peasants = 1.1
+		laborers = 1.1
+		soldiers = 1.0
+	}
+	
+
 
 	custom_tags = { old_world_goods }
 }
@@ -189,13 +199,23 @@ livestock = {
 	ai_rgo_size_importance = 1.5 # ai preference to avoid building a city on this rgo
 	
 	demand_add = {	
-		all = 0.002
+		all = 0.001
+		
 	}
 	demand_multiply = {
-		 nobles = 20
-		 clergy = 5
-		 burghers = 5
+		 nobles = 30
+		 clergy = 10
+		 burghers = 10
+		 slaves = 0
+		 tribesmen = 0
 	}
+	
+	wealth_impact_threshold = {
+		peasants = 1.1
+		laborers = 1.1
+		soldiers = 1.1
+	}
+
 	
 	custom_tags = { old_world_goods }
 }
@@ -253,7 +273,17 @@ beeswax = {
 	}
 	demand_multiply = {
 		upper = 2
+		 slaves = 0
+		 tribesmen = 0
+
 	}
+	
+	wealth_impact_threshold = {
+		peasants = 1.1
+		laborers = 1.1
+		soldiers = 1.1
+	}
+
 
 	
 }

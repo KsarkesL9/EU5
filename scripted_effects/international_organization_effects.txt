@@ -613,9 +613,12 @@ apply_pu_supporters_estate_satisfaction_hit = {
 		value = $value$
 		save_scope_as = target_io
 		if = {
-			limit = { resolution_is_active = resolution:policy_vote }
+			limit = {
+				resolution_is_active = resolution:policy_vote
+				has_variable = io_law_target
+			}
 			every_international_organization_member = {
-				limit = { scope:target_io = { has_voted_for = { voter = prev resolution = resolution:policy_vote vote = scope:vote } } }
+				limit = { scope:target_io = { has_voted_for = { voter = prev resolution = resolution:policy_vote vote = var:io_law_target } } }
 				add_estate_satisfaction = { type = estate_type:nobles_estate value = $value$ }
 				add_estate_satisfaction = { type = estate_type:clergy_estate value = $value$ }
 				add_estate_satisfaction = { type = estate_type:burghers_estate value = $value$ }
@@ -629,9 +632,12 @@ apply_pu_opponents_estate_satisfaction_hit = {
 		value = $value$
 		save_scope_as = target_io
 		if = {
-			limit = { resolution_is_active = resolution:policy_vote }
+			limit = {
+				resolution_is_active = resolution:policy_vote
+				has_variable = io_current_law
+			}
 			every_international_organization_member = {
-				limit = { scope:target_io = { NOT = { has_voted_for = { voter = prev resolution = resolution:policy_vote vote = scope:vote } } } }
+				limit = { scope:target_io = { has_voted_for = { voter = prev resolution = resolution:policy_vote vote = var:io_current_law } } }
 				add_estate_satisfaction = { type = estate_type:nobles_estate value = $value$ }
 				add_estate_satisfaction = { type = estate_type:clergy_estate value = $value$ }
 				add_estate_satisfaction = { type = estate_type:burghers_estate value = $value$ }
@@ -734,21 +740,36 @@ apply_union_levels = {
 }
 
 apply_same_inheritance_policy_effect = {
-	custom_tooltip = {
-		text = union_codified_inheritance_policy_at
+	hidden_effect = {
 		ordered_country_with_special_status_of_type = {
 			type = senior_partner
-			limit = {
-				succession_law = {
-					NOT = { is_locked_for = prev }
-					NOT = { has_tag = cannot_be_transferred }
-				}
-			}
 			order_by = great_power_score
 			check_range_bounds = no
 			max = 1
-			succession_law ?= { save_scope_as = target_heir_selection }
+			if = {
+				limit = {
+					succession_law = {
+						NOT = { is_locked_for = prev }
+						NOT = { has_tag = cannot_be_transferred }
+					}
+				}
+				succession_law ?= { save_scope_as = target_heir_selection }
+			}
+			if = {
+				limit = {
+					has_law = heir_religion_law
+					"law_policy(law:heir_religion_law)" = {
+						NOT = { is_locked_for = prev }
+					}
+				}
+				"law_policy(law:heir_religion_law)" = {
+					save_scope_as = target_heir_religion_policy
+				}
+			}
 		}
+	}
+	custom_tooltip = {
+		text = union_codified_inheritance_policy_at
 		if = {
 			limit = { exists = scope:target_heir_selection }
 			every_international_organization_member = {
@@ -764,6 +785,29 @@ apply_same_inheritance_policy_effect = {
 					has_union_integration_level_as_union = yes
 				}
 				change_heir_selection = scope:target_heir_selection
+			}
+		}
+	}
+	custom_tooltip = {
+		text = union_codified_inheritance_policy_ct
+		if = {
+			limit = { exists = scope:target_heir_religion_policy }
+			every_international_organization_member = {
+				limit = {
+					scope:target_heir_religion_policy = {
+						is_implementable_in = prev
+						NOT = { is_locked_for = prev }
+					}
+					"law_policy(law:heir_religion_law)" != scope:target_heir_religion_policy
+					NOT = {
+						has_special_status_in_international_organization = {
+							type = special_status:senior_partner
+							international_organization = prev
+						}
+					}
+					has_union_integration_level_as_union = yes
+				}
+				add_policy = scope:target_heir_religion_policy
 			}
 		}
 	}

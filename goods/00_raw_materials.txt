@@ -85,6 +85,11 @@ goods_gold = {
 	demand_add = {
 		nobles = 0.025
 	}	
+	
+	wealth_impact_threshold = {
+		all = 1.05
+	}
+
 }
 
 silver = {
@@ -100,6 +105,13 @@ silver = {
 	demand_add = {
 		nobles = 0.025
 	}
+	
+
+	
+	wealth_impact_threshold = {
+		all = 1.05
+	}
+
 }
 
 stone = {
@@ -156,6 +168,12 @@ incense = {
 	demand_add = {
 		clergy = 0.01
 	}	
+	
+	
+	wealth_impact_threshold = {
+		all = 0.5
+	}
+
 }
 
 tea = {
@@ -169,6 +187,11 @@ tea = {
 		burghers = 0.01
 		clergy = 0.01
 	}
+		
+	wealth_impact_threshold = {
+		all = 0.75
+	}
+
 }
 
 
@@ -182,6 +205,11 @@ cocoa = {
 		burghers = 0.01
 		clergy = 0.01
 	}
+	
+	wealth_impact_threshold = {
+		all = 0.75
+	}
+	
 	custom_tags = { new_world_goods }
 }
 
@@ -197,6 +225,10 @@ coffee = {
 		burghers = 0.001
 		clergy = 0.0005
 		soldiers = 0.001
+	}
+	
+	wealth_impact_threshold = {
+		all = 0.75
 	}
 
 	custom_tags = { old_world_goods }
@@ -218,6 +250,12 @@ ivory = {
 	demand_add = {
 		nobles = 0.05
 	}
+	
+	development_threshold = 20
+	
+	wealth_impact_threshold = {
+		all = 1.1
+	}
 }
 
 
@@ -236,6 +274,8 @@ lumber  = {
 		all = 0.00025
 	}
 	
+
+	
 	demand_multiply = {
 		upper = 5
 	}	
@@ -249,8 +289,8 @@ salt = {
 	default_market_price = 4
 	
 	demand_add = {
-		nobles = 0.2
-		burghers = 0.02
+		nobles = 0.05
+		burghers = 0.004
 	}
 }
 
@@ -272,6 +312,11 @@ medicaments = { #Medicinal plants, Pills, Opium, Mummy Powder, etc
 		burghers = 1.5
 		slaves = 0.1
 	}	
+	
+	
+	wealth_impact_threshold = {
+		all = 1.1
+	}
 
 }
 
@@ -287,8 +332,15 @@ gems = {
 	demand_add = {
 		nobles = 0.05
 	}
+
+
+	wealth_impact_threshold = {
+		all = 1.25
+	}
 	
 }
+
+
 
 pearls = {
 	method = gathering
@@ -301,6 +353,12 @@ pearls = {
 		burghers = 0.0025
 	}
 
+	development_threshold = 20
+	
+	wealth_impact_threshold = {
+		nobles = 1.0
+		burghers = 1.5
+	}
 	
 }
 
@@ -314,6 +372,11 @@ amber = {
 		nobles = 0.1
 		burghers = 0.005
 	}	
+	
+	wealth_impact_threshold = {
+		nobles = 1.0
+		burghers = 1.5
+	}
 }
 
 saltpeter = {
@@ -344,6 +407,9 @@ wine = {
 	demand_multiply = {
 		upper = 10
 		nobles = 1.5
+		
+		slaves = 0
+		tribesmen = 0
 	}
 	custom_tags = { old_world_goods }
 }
@@ -358,6 +424,10 @@ elephants = {
 	demand_add = {
 		nobles =  0.1
 	}	
+	
+	wealth_impact_threshold = {
+		nobles = 2
+	}
 }
 
 marble = {
@@ -369,6 +439,11 @@ marble = {
 	demand_add = {
 		nobles = 0.05
 	}	
+	
+	development_threshold = 40
+	wealth_impact_threshold = {
+		nobles = 1.5
+	}
 }
 
 mercury = {
@@ -382,6 +457,9 @@ mercury = {
 		all = 0.00005
 	}	
 	
+	wealth_impact_threshold = {
+		all = 1.0
+	}
 }
 
 
@@ -398,6 +476,11 @@ saffron = {
 		burghers = 0.002
 		clergy = 0.005
 	}
+
+	wealth_impact_threshold = {
+		all = 1.1
+	}
+	
 }
 
 pepper = {
@@ -408,10 +491,15 @@ pepper = {
 	transport_cost = 0.5
 	
 	demand_add = {
-		nobles = 0.1
+		nobles = 0.05
 		burghers = 0.0025
 		clergy = 0.005
 	}
+	
+	wealth_impact_threshold = {
+		all = 1.1
+	}
+
 }
 
 cloves = {
@@ -422,10 +510,15 @@ cloves = {
 	transport_cost = 0.5
 	
 	demand_add = {
-		nobles = 0.1
+		nobles = 0.05
 		burghers = 0.0025
 		clergy = 0.005
 	}
+	
+	wealth_impact_threshold = {
+		all = 1.1
+	}
+
 }
 
 
@@ -438,10 +531,16 @@ chili = {
 	transport_cost = 0.5
 	
 	demand_add = {
-		nobles = 0.1
+		nobles = 0.05
 		burghers = 0.0025
 		clergy = 0.005
 	}
+	
+	
+	wealth_impact_threshold = {
+		all = 1.1
+	}
+	
 	custom_tags = { new_world_goods }
 }
 

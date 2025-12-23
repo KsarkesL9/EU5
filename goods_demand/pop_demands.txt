@@ -791,13 +791,14 @@ pop_demand = {
 				}
 				and = {
 					exists = owner
-					owner.modifier:peasants_allowed_weapons = yes
+					owner.modifier:peasants_allowed_weapons = no
 				}
 			}
 			
-			add = {
-				value = 0.0005
-				desc = "POP_DEMAND_PEASANTS"
+			
+			multiply = {
+				value = 0
+				desc = "POP_DEMAND_PEASANTSNO_WEAPONS"
 			}
 		}
 
@@ -1104,6 +1105,20 @@ pop_demand = {
 				desc = "POP_DEMAND_BALTIC"
 			}
 		}
+		
+		if = {
+			limit = {
+				NOT = {
+					location.market ?= { is_produced_in_market = goods:millet }
+				}
+			}
+			multiply = {
+				value = 0
+				
+				desc = "POP_DEMAND_LOCAL_CUISINE"
+			}
+		}
+
 	}	
 		
 	wild_game = {
@@ -1159,6 +1174,20 @@ pop_demand = {
 				desc = "POP_DEMAND_JAIN"
 			}
 		}
+		
+		if = {
+			limit = {
+				NOT = {
+					location.market ?= { is_produced_in_market = goods:wild_game }
+				}
+			}
+			multiply = {
+				value = 0
+				
+				desc = "POP_DEMAND_LOCAL_CUISINE"
+			}
+		}
+
 	}
 	
 	fish = {
@@ -1545,6 +1574,19 @@ pop_demand = {
 			add = {
 				value = 0.002
 				desc = "POP_DEMAND_EGYPT"
+			}
+		}
+		
+		if = {
+			limit = {
+				NOT = {
+					location.market ?= { is_produced_in_market = goods:rice }
+				}
+			}
+			multiply = {
+				value = 0
+				
+				desc = "POP_DEMAND_LOCAL_CUISINE"
 			}
 		}
 

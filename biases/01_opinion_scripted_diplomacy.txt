@@ -22,6 +22,7 @@ opinion_forced_succession_law_on_partner = {
 opinion_tried_to_excommunicate_us = {
 	value = -50
 	yearly_decay = 5
+	min = -200
 }
 
 opinion_receiving_deny_market_access = {
@@ -43,6 +44,7 @@ opinion_receiving_trade_access = {
 opinion_excommunicated = {
 	value = -100
 	yearly_decay = 5
+	min = -200
 }
 
 opinion_broke_trade_access = {
@@ -200,6 +202,10 @@ opinion_receiving_embargo_nation = {
 
 opinion_receiving_forced_divert_trade = {
 	value = -40
+}
+
+opinion_receiving_rein_in_junior_diplomacy = {
+	value = -50
 }
 
 opinion_union_of_crowns_pact = {
@@ -383,7 +389,8 @@ opinion_added_land_to_hre = {
 
 opinion_removed_land_from_hre = {
 	value = -10
-	yearly_decay = 1
+	yearly_decay = 2
+	min = -200
 }
 
 opinion_overruled_imperial_diet = {
@@ -397,8 +404,10 @@ opinion_elevated_country = {
 }
 
 opinion_weakened_our_league = {
-	value = -10
+	value = -2
 	yearly_decay = 1
+
+	min = -100
 }
 
 opinion_strengthened_our_league = {
@@ -566,4 +575,16 @@ schism_called_council = {
 opinion_denied_sinicization_modifier = {
 	value = -100
 	yearly_decay = 5
+}
+
+opinion_released_from_unlawful_territory = {
+	value = 100
+	yearly_decay = 5
+}
+
+opinion_donated_gold_to_io = {
+	value = 25
+	yearly_decay = 2
+	max = 100
+	min = 0
 }

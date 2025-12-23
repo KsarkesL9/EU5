@@ -166,20 +166,32 @@ character_can_marry_recipient_trigger = {
 	# root = character proposing
 	# scope:recipient = character target of proposal
 
-	NOT = {
-		OR = {
-			owner ?= { modifier:country_celtic_marriage_banned = yes }
-			scope:recipient = { owner ?= { modifier:country_celtic_marriage_banned = yes } }
+	OR = {
+		AND = {
+			NOT = {
+				OR = {
+					owner ?= { modifier:country_celtic_marriage_banned = yes }
+					scope:recipient = { owner ?= { modifier:country_celtic_marriage_banned = yes } }
+				}
+			}
+			OR = {
+				AND = {
+					culture = { has_culture_group = culture_group:celtic_group }
+					NOT = { scope:recipient.culture = { has_culture_group = culture_group:celtic_group } }
+				}
+				AND = {
+					scope:recipient.culture = { has_culture_group = culture_group:celtic_group }
+					NOT = { culture = { has_culture_group = culture_group:celtic_group } }
+				}
+			}
 		}
-		OR = {
-			AND = {
-				culture = { has_culture_group = culture_group:celtic_group }
-				NOT = { scope:recipient.culture = { has_culture_group = culture_group:celtic_group } }
-			}
-			AND = {
-				scope:recipient.culture = { has_culture_group = culture_group:celtic_group }
-				NOT = { culture = { has_culture_group = culture_group:celtic_group } }
-			}
+		AND = {
+			culture = { has_culture_group = culture_group:celtic_group }
+			scope:recipient.culture = { has_culture_group = culture_group:celtic_group }
+		}
+		AND = {
+			NOT = { culture = { has_culture_group = culture_group:celtic_group } }
+			NOT = { scope:recipient.culture = { has_culture_group = culture_group:celtic_group } }
 		}
 	}
 }

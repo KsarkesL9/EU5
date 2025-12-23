@@ -2,6 +2,7 @@
 	monthly_spawn_chance = monthly_spawn_chance_unique
 	resolution = "nanbokuchou_resolution"
 	voters = nanbokuchou_voters
+	hint_tag = hint_nanbokuchou
 	
 	can_start = {
 		current_date > 1336.1.1
@@ -120,10 +121,26 @@
 				if = {
 					limit = { has_variable = supports_northern_court }
 					add_to_global_variable_list = { name = nanbokuchou_northern_supporters target = this }
+					situation:nanbokuchou = {
+						set_vote = {
+							voter = prev
+							resolution = resolution:nanbokuchou_resolution
+							vote = c:STC
+							locked = yes
+						}
+					}
 				}
 				if = {
 					limit = { has_variable = supports_southern_court }
 					add_to_global_variable_list = { name = nanbokuchou_southern_supporters target = this }
+					situation:nanbokuchou = {
+						set_vote = {
+							voter = prev
+							resolution = resolution:nanbokuchou_resolution
+							vote = c:STC
+							locked = yes
+						}
+					}
 				}
 				if = {
 					limit = {
@@ -131,6 +148,13 @@
 						NOT = { has_variable = supports_southern_court }
 					}
 					add_to_global_variable_list = { name = nanbokuchou_neutral_countries target = this }
+					situation:nanbokuchou = {
+						set_vote = {
+							voter = prev
+							resolution = resolution:nanbokuchou_resolution
+							locked = yes
+						}
+					}
 				}
 			}
 		}

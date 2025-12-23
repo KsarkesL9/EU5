@@ -2,16 +2,17 @@
 
 	image = "gfx/interface/illustrations/disaster/castilian_civil_war.dds"
 	
-	monthly_spawn_chance = monthly_spawn_chance_very_low
+	monthly_spawn_chance = monthly_spawn_chance_ultimate_high
 	can_start = {
 		tag = CAS
 		has_any_active_disaster = no
 		government_type = government_type:monarchy
 		in_civil_war = no
 		ruler_or_regent ?= {
+			this != character:cas_alfonso_xi_burgundy
 			OR = {
 				this = character:cas_pedro_i_burgundy
-				dynasty ?= dynasty:ivree_dynasty
+				dynasty ?= dynasty:burgundy_castile_dynasty
 			}
 		}
 		any_character = {
@@ -38,7 +39,6 @@
 			legitimacy < 40
 			stability < 15
 		}
-		NOT = { ruler = character:cas_pedro_i_burgundy }
 	}
 	
 	can_end = {
@@ -47,8 +47,8 @@
 	modifier = {
 		monthly_pretender_rebel_growth = 0.01
 		global_crown_estate_power = -0.2
-		global_estate_target_satisfaction = big_permanent_target_satisfaction_penalty
-		monthly_legitimacy = 0.25
+		global_estate_target_satisfaction = larger_permanent_target_satisfaction_penalty
+		blocked_from_creating_subjects = yes
 	}
 	
 	on_start = {

@@ -88,7 +88,7 @@ hundred_years_war_unified_requirements = {
 						text = owned_by_fra_tt
 						owner = { this = c:FRA }
 					}
-					count > 200
+					count > 230
 				}
 			}
 		}
@@ -111,7 +111,7 @@ hundred_years_war_unified_requirements = {
 					owner = {
 						top_overlord_or_this ?= c:ENG
 					}
-					count > 130
+					count > 175
 				}
 			}
 		}
@@ -395,7 +395,12 @@ rtr_situation_end_requirements = {
 			legitimacy >= 90
 			stability >= 30
 			current_celestial_authority = { value = 50 }
-			international_organization:red_turban_rebels = { total_members < 1 }
+			trigger_if = {
+				limit = {
+					exists = international_organization:red_turban_rebels
+				}
+				international_organization:red_turban_rebels = { total_members < 1 }
+			}
 		}
 	}
 }
@@ -563,29 +568,6 @@ rise_of_timur_end_conditions = {
 rise_of_the_ottomans_end_trigger = {
 	OR = {
 		current_year > 1565
-		trigger_if = {
-			limit = { 
-				country_exists = c:TUR
-				var:strongest_beylik_variable = c:TUR
-			}
-			custom_tooltip = {
-				text = strongest_beylik_has_over_75_locations
-				var:strongest_beylik_variable = { 
-					num_locations > 500 
-					num_of_non_rural >= 50
-				}	
-			}
-		}
-		trigger_else = {
-			custom_tooltip = {
-				text = strongest_beylik_has_over_75_locations
-				var:strongest_beylik_variable = { 
-					num_locations > 500
-					num_of_non_rural >= 50
-				}
-			}
-			NOT = { country_exists = c:TUR }
-		}
 		custom_tooltip = {
 			text = no_beyliks_left_tt
 			global_variable_list_size = {
@@ -593,42 +575,42 @@ rise_of_the_ottomans_end_trigger = {
 				value < 1
 			}
 		}
-		AND = {
-			current_year > 1400
-			custom_tooltip = {
-				text = no_beylik_has_100_locations_tt
-				NOT = {
-					any_in_global_list = {
-						variable = eligible_beylik_list
-						is_subject = no
-						num_locations >= 100
-					}
+		trigger_if = {
+			limit = { 
+				country_exists = c:TUR
+				var:strongest_beylik_variable = c:TUR
+			}
+			AND = {
+				custom_tooltip = {
+					text = strongest_beylik_has_over_75_locations
+					var:strongest_beylik_variable = { 
+						num_locations > 500 
+						num_of_non_rural >= 50
+					}	
 				}
+				var:strongest_beylik_variable = { is_subject = no }
 			}
 		}
-	}
-}
-
-rise_of_the_ottomans_end_trigger_beylik_victory = {
-	trigger_if = {
-		limit = { var:strongest_beylik_variable = c:TUR }
-		custom_tooltip = {
-			text = strongest_beylik_has_over_75_locations
-			var:strongest_beylik_variable = { 
-				num_locations > 1000 
-				num_of_non_rural >= 75
-			}	
+		trigger_else = {
+			AND = {
+				custom_tooltip = {
+					text = strongest_beylik_has_over_75_locations
+					var:strongest_beylik_variable = { 
+						num_locations > 500
+						num_of_non_rural >= 50
+					}
+				}
+				NOT = { country_exists = c:TUR }
+				var:strongest_beylik_variable = { is_subject = no }
+			}
 		}
-	}
-	trigger_else = {
-		custom_tooltip = {
-			text = strongest_beylik_has_over_75_locations
-			var:strongest_beylik_variable = { 
-				num_locations > 1000 
-				num_of_non_rural >= 75
-			}	
+		AND = {
+			current_year >= 1400
+			var:strongest_beylik_variable ?= {
+				num_locations < 100 
+				in_civil_war = no
+			}
 		}
-		NOT = { country_exists = c:TUR }
 	}
 }
 
@@ -774,11 +756,13 @@ fall_of_delhi_end_trigger = {
 		}
 		custom_tooltip = {
 			text = has_decided_to_cede_territories_tt
-			has_variable = dlh_surrendered_territories_var
+			c:DLH = { has_variable = dlh_surrendered_territories_var }
 		}
 		custom_tooltip = {
 			text = dissolution_of_delhi_started_tt
-			has_variable = dissolution_of_delhi_started
+			c:DLH = {
+				any_active_disaster = { disaster_type = disaster_type:dissolution_of_delhi }
+			}
 		}
 		NOT = { country_exists = c:DLH }
 	}
@@ -1035,16 +1019,6 @@ is_location_claimed_or_owned_by_country = {
 	}
 }
 
-#root = actor country
-pope_has_better_or_equal_opinion_of_root_than = {
-	value = c:PAP.this_opinion_of_prev
-	compare_value >= {
-		$other_country$ = {
-			value = c:PAP.this_opinion_of_prev
-		}
-	}
-}
-
 # Black Death Situation Triggers
 has_expensive_procure_remedies_goods = {
 	#If any of the selected goods are expensive
@@ -1073,12 +1047,18 @@ western_schism_end_trigger = {
 			}
 			OR = {
 				custom_tooltip = {
-					text = western_schism_2_tt 
+					text = western_schism_2_tt
 					var:western_schism_pope_score >= 2
+					situation:western_schism = {
+						has_variable = western_schism_ended_by_event
+					}
 				}
 				custom_tooltip = {
 					text = western_schism_3_tt
 					var:western_schism_anti_pope_score >= 2
+					situation:western_schism = {
+						has_variable = western_schism_ended_by_event
+					}
 				}
 			}
 		}

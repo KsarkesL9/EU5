@@ -20,16 +20,7 @@
 		column = { data = name }
 		column = { data = population }
 		visible = {
-			scope:actor = {
-				is_valid_colonial_charter = root
-				not = {
-					any_cabinet = {
-						has_cabinet_action = yes
-						cabinet_action ?= cabinet_action:settle_the_frontier
-						interaction_target:target ?= root
-					}
-				}
-			}
+			NOT = { cabinet_already_performing_same_task_on_target = { cabinet_action = settle_the_frontier interaction_target = target } }
 		}
 		enabled = {
 		}
@@ -119,7 +110,11 @@
 				owner = scope:actor
 				from = scope:source.province_definition
 				to = scope:target
-				amount = 1
+				amount = {
+					value = scope:source.population
+					multiply = 0.001		#so we at most move out 15%
+					max = 1
+				}
 				months = 120
 			}
 		}

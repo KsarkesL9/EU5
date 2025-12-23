@@ -27,7 +27,10 @@ bestow_elector_status = {
 			international_organization:hre = {
 				OR = {
 					AND = {
-						"num_countries_with_special_status(special_status:elector)" < "max_countries_with_special_status(special_status:elector)"
+						num_countries_with_special_status = {
+							type = special_status:elector
+							value < "max_countries_with_special_status(special_status:elector)"
+						}
 						NOT = {
 							country_has_special_status = {
 								type = special_status:elector
@@ -36,7 +39,10 @@ bestow_elector_status = {
 						}
 					}
 					AND = {
-						"num_countries_with_special_status(special_status:archbishop_elector)" < "max_countries_with_special_status(special_status:archbishop_elector)"
+						num_countries_with_special_status = {
+							type = special_status:archbishop_elector
+							value < "max_countries_with_special_status(special_status:archbishop_elector)"
+						}
 						NOT = {
 							country_has_special_status = {
 								type = special_status:archbishop_elector
@@ -51,14 +57,20 @@ bestow_elector_status = {
 			international_organization:hre = {
 				OR = {
 					AND = {
-						"num_countries_with_special_status(special_status:elector)" < "max_countries_with_special_status(special_status:elector)"
+						num_countries_with_special_status = {
+							type = special_status:elector
+							value < "max_countries_with_special_status(special_status:elector)"
+						}
 						special_status_can_be_bestowed = {
 							type = special_status:elector
 							country = root
 						}
 					}
 					AND = {
-						"num_countries_with_special_status(special_status:archbishop_elector)" < "max_countries_with_special_status(special_status:archbishop_elector)"
+						num_countries_with_special_status = {
+							type = special_status:archbishop_elector
+							value < "max_countries_with_special_status(special_status:archbishop_elector)"
+						}
 						special_status_can_be_bestowed = {
 							type = special_status:archbishop_elector
 							country = root
@@ -505,48 +517,45 @@ bestow_free_city_status = {
 	}
 
 	accept = {
-		add = {
-			desc = "THEIR_OPINION_TOOLTIP"
-			value = "scope:recipient.opinion(scope:actor)"
+		if = {
+			limit = { exists = scope:recipient }
 			if = {
-				limit = {
-					scope:recipient = {
-						"opinion(scope:actor)" > 0
+				limit = { scope:recipient = { government_type = government_type:theocracy } }
+				subtract = 100
+			}
+			if = {
+				limit = { scope:recipient = { government_type = government_type:monarchy } }
+				subtract = 50
+			}
+			if = {
+				limit = { exists = scope:actor }
+				add = {
+					desc = "THEIR_OPINION_TOOLTIP"
+					value = "scope:recipient.opinion(scope:actor)"
+					if = {
+						limit = { scope:recipient = { "opinion(scope:actor)" > 0 } }
+						divide = 10
+					}
+					else = {
+						divide = 5
 					}
 				}
-				divide = 10
-			}
-			else = {
-				divide = 5
-			}
-		}
-		if = {
-			limit = {
-				scope:recipient = {
-					government_type = government_type:theocracy
+				add = {
+					scope:actor = {
+						value = modifier:diplomatic_reputation
+						multiply = 3
+					}
+				}
+				add = {
+					scope:recipient = {
+						value = "trust(scope:actor)"
+						divide = 5
+					}
 				}
 			}
-			subtract = 100
 		}
-		if = {
-			limit = {
-				scope:recipient = {
-					government_type = government_type:monarchy
-				}
-			}
-			subtract = 50
-		}
-		add = {
-			scope:actor = {
-				value = modifier:diplomatic_reputation
-				multiply = 3
-			}
-		}
-		add = {
-			scope:recipient = {
-				value = "trust(scope:actor)"
-				divide = 5
-			}
+		else = {
+			value = 0
 		}
 	}
 }
@@ -895,8 +904,6 @@ request_kingdom_title = {
 				NOT = { has_global_variable_list = hre_kingdoms_list }
 				NOT = { is_target_in_global_variable_list = { name = hre_kingdoms_list target = root } }
 			}
-		}
-		enabled = {
 			scope:actor.capital = { is_required_for_formable = root }
 			is_available_for = scope:actor
 			has_been_formed = no
@@ -906,6 +913,8 @@ request_kingdom_title = {
 					value >= 0.5
 				}
 			}
+		}
+		enabled = {
 		}
 	}
 	effect = {
@@ -926,11 +935,11 @@ request_kingdom_title = {
 				country = scope:recipient
 				value = bestow_kingdom_title_cost
 			}
+			set_country_rank_effect = { rank = country_rank:rank_kingdom }
 			if = {
 				limit = { exists = scope:target }
 				form_country = scope:target
 			}
-			set_country_rank_effect = { rank = country_rank:rank_kingdom }
 			add_opinion = {
 				target = scope:recipient
 				modifier = opinion_elevated_country
@@ -1058,7 +1067,7 @@ ask_for_dukedom = {
 	accept = {
 		subtract = {
 			desc = "VOTE_BASE_VALUE"
-			value = 20
+			value = 100
 		}
 		if = {
 			limit = { scope:actor = { is_allied_with = { target = scope:recipient } } }
@@ -1144,11 +1153,14 @@ elevate_county = {
 	}
 
 	effect = {
-		scope:recipient = {
-			set_country_rank_effect = { rank = country_rank:rank_duchy }
-			add_opinion = {
-				target = scope:actor
-				modifier = opinion_elevated_country
+		if = {
+			limit = { exists = scope:recipient }
+			scope:recipient = {
+				set_country_rank_effect = { rank = country_rank:rank_duchy }
+				add_opinion = {
+					target = scope:actor
+					modifier = opinion_elevated_country
+				}
 			}
 		}
 	}
@@ -1253,7 +1265,7 @@ request_county_privileges = {
 	accept = {
 		subtract = {
 			desc = "VOTE_BASE_VALUE"
-			value = 20
+			value = 100
 		}
 		add = {
 			desc = "THEIR_OPINION_TOOLTIP"
@@ -1410,6 +1422,7 @@ enforce_landfriede = {
 		}
         enabled = {
 			any_current_war = {
+				NOT = { is_civil_war_for = prev }
 				attacker_leader = prev
 				defender_leader = { is_member_of_international_organization = international_organization:hre }
 			}
@@ -1496,6 +1509,20 @@ enforce_religious_unity = {
 			religion != scope:actor.religion
 		}
         enabled = {
+			trigger_if = {
+				limit = { modifier:blocked_from_conversion = yes }
+				always = no
+			}
+			trigger_if = {
+				limit = {
+					is_situation_active = situation:hussite_wars 
+					religion = religion:hussite
+				}
+				custom_tooltip = {
+					text = HUSSITE_WARS_UNRESOLVED
+					always = no
+				}
+			}
 		}
 	}
 	effect = {
@@ -1561,21 +1588,25 @@ demand_unlawful_territory = {
 			data = name
 		}
 		visible = {
-			is_subject = no
-			is_rebel_country = no
 		}
         enabled = {
+			is_subject = no
+			is_rebel_country = no
 		}
 	}
 	select_trigger = {
 		looking_for_a = province
+		none_available_msg_key = "demand_unlawful_territory_no_hre_province"
 		interaction_source_list = {
 			scope:recipient = {
 				every_province = {
 					limit = {
 						any_location_in_province = {
 							is_owned_by_international_organization = international_organization:hre
-							integration_level = conquered 
+							integration_level = conquered
+							any_core_in_location = {
+								exists = this
+							}
 						}
 					}
 					add_to_list = source
@@ -1586,6 +1617,9 @@ demand_unlawful_territory = {
 							any_location_in_province = {
 								is_owned_by_international_organization = international_organization:hre
 								integration_level = conquered
+								any_core_in_location = {
+									exists = this
+								}
 							}
 						}
 						add_to_list = source
@@ -1602,13 +1636,13 @@ demand_unlawful_territory = {
 			data = population
 		}
 		visible = {
+			any_location_in_province = {
+				is_owned_by_international_organization = international_organization:hre
+				integration_level = conquered
+				NOT = { is_core_of = root.owner }
+			}
 		}
 		enabled = {
-			NOT = {
-				any_location_in_province = {
-					is_core_of = root.owner
-				}
-			}
 		}
 	}
 	effect = {
@@ -1660,6 +1694,44 @@ demand_unlawful_territory = {
 					}
 					else = {
 						change_location_owner = scope:actor
+						add_to_list = hre_locations_to_give_away
+					}
+				}
+			}
+			if = {
+				limit = { list_size = { name = hre_locations_to_give_away value > 0 } }
+				ordered_in_list = {
+					list = hre_locations_to_give_away
+					order_by = {
+						value = population
+						if = {
+							limit = { location_rank = location_rank:city }
+							multiply = 5
+						}
+						else_if = {
+							limit = { location_rank = location_rank:town }
+							multiply = 2
+						}
+					}
+					max = 1
+					check_range_bounds = no
+					save_scope_as = target_location
+					create_country_from_location = {
+						save_scope_as = target_country
+						set_capital = scope:target_location
+					}
+				}
+				if = {
+					limit = { exists = scope:target_country }
+					every_in_list = {
+						list = hre_locations_to_give_away
+						change_location_owner = scope:target_country
+					}
+					scope:target_country = {
+						add_opinion = {
+							modifier = opinion_released_from_unlawful_territory
+							target = scope:actor
+						}
 					}
 				}
 			}
@@ -1858,7 +1930,7 @@ ask_to_vote_for_me_as_emperor = {
 					NOT = { scope:actor = international_organization:hre.leader_country }
 				}
 				international_organization:hre.leader_country  = {
-					value = scope:actor.this_opinion_of_prev
+					scope:actor = { value = this_opinion_of_prev }
 				}
 			}
 		}

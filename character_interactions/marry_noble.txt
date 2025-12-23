@@ -17,6 +17,7 @@
 			OR = {
 				government_type = government_type:monarchy
 				succession_law = heir_selection:signoria_selection
+				succession_law = heir_selection:matrilineal_non_exclusive
 			}
 		}
 	}
@@ -39,7 +40,7 @@
 			is_alive = yes
 		}
 		enabled = {
-			character_can_marry_trigger = yes
+			is_eligible_for_royal_marriage = yes
 		}
 	}
 
@@ -81,31 +82,14 @@
 			character_can_marry_trigger = yes
 			not = { is_spouse_of = scope:recipient }
 			modifier:blocked_from_character_interactions = no
+			character_can_marry_recipient_trigger = yes
 		}
 
-		enabled = {
-			trigger_if = {
-				limit = {
-					OR = {
-						scope:actor.owner ?= { modifier:country_celtic_marriage_banned = yes }
-						scope:recipient.owner ?= { modifier:country_celtic_marriage_banned = yes }
-					}
-				}
-				OR = {
-					AND = {
-						scope:actor ?= { culture = { has_culture_group = culture_group:celtic_group } }
-						scope:target ?= { culture = { has_culture_group = culture_group:celtic_group } }
-					}
-					AND = {
-						NOT = { scope:actor ?= { culture = { has_culture_group = culture_group:celtic_group } } }
-						NOT = { scope:target ?= { culture = { has_culture_group = culture_group:celtic_group } } }
-					}
-				}
-			}
-			trigger_else = {
-				always = yes
-			}
-		}
+		#enabled = {
+		#	scope:recipient = {
+		#		character_can_marry_recipient_trigger = yes
+		#	}
+		#}
 	}
 	
 	effect = {

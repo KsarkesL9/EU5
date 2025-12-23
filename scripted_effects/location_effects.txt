@@ -294,12 +294,20 @@ create_some_heretics = {
 		40 = {
 			trigger = {
 				religion:lollardy = { is_religion_enabled = yes }
-				owner = { has_primary_or_accepted_culture = culture:english }
+				owner = {
+					any_primary_or_accepted_culture = {
+						language = language:english_language
+					}
+				}
 			}
 			ordered_pop = {
-				limit = { religion = religion:catholic }
+				limit = { 
+					religion = religion:catholic
+					culture.language = language:english_language
+				}
 				order_by = pop_size
 				max = 2
+				check_range_bounds = no
 				split_pop = {
 					fraction = { 0.04 0.07 }
 					religion = religion:lollardy
@@ -317,6 +325,43 @@ create_some_heretics = {
 					religion = religion:waldensian
 				}
 			}
+		}
+	}
+}
+
+
+#To be used inside location - > building calculations
+#Root = location
+#Prev = building
+minor_destroy_building_levels_in_location = {
+	change_building_level_in_location = {
+		building = prev
+		value = {
+			add = prev.building_level
+			multiply = { -0.1 -0.2 }
+			floor = yes
+		}
+	}
+}
+
+major_destroy_building_levels_in_location = {
+	change_building_level_in_location = {
+		building = prev
+		value = {
+			add = prev.building_level
+			multiply = { -0.2 -0.3 }
+			floor = yes
+		}
+	}
+}
+
+catastrophic_destroy_building_levels_in_location = {
+	change_building_level_in_location = {
+		building = prev.building_type
+		value = {
+			add = prev.building_level
+			multiply = { -0.3 -0.4 }
+			floor = yes
 		}
 	}
 }

@@ -340,7 +340,7 @@ prepare_for_war = {
 	sound = PARLIAMENT_PREPARE_FOR_WAR
 	
 	ai_tick = daily
-	ai_tick_frequency = 100
+	ai_tick_frequency = 30
 	automation_tick = daily
 	automation_tick_frequency = 7
 	player_automated_category = parliament
@@ -364,6 +364,10 @@ prepare_for_war = {
 						capital = {
 							is_discovered_by = scope:actor
 						}
+						NOT = { has_target_casus_belli_on_us = root }
+						NOT = { has_truce_with = scope:actor }
+						NOT = { is_subject_of = scope:actor }
+						is_rebel_country = no
 					}
 					add_to_list = source
 				}
@@ -394,10 +398,16 @@ prepare_for_war = {
 					value = 100
 				}
 			}
-			subtract = {
-				desc = "OUR_OPINION_TOOLTIP"
-				value = "scope:actor.opinion(scope:target)"
-				divide = 10
+			if = {
+				limit = {
+					exists = scope:actor
+					exists = scope:target
+				}
+				subtract = {
+					desc = "OUR_OPINION_TOOLTIP"
+					value = "scope:actor.opinion(scope:target)"
+					divide = 10
+				}
 			}
 			if = {
 				limit = {
@@ -416,12 +426,6 @@ prepare_for_war = {
 		}
 		column = {
 			data = population
-		}
-		visible = {
-			NOT = { has_target_casus_belli_on_us = root }
-			NOT = { has_truce_with = scope:actor }
-			NOT = { is_subject_of = scope:actor }
-			is_rebel_country = no
 		}
 	}
 	

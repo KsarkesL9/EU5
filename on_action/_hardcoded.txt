@@ -1,6 +1,14 @@
 ﻿on_game_start = {
 	effect = {
 		#catholics
+		if = {
+			limit = { NOT = { has_global_variable_list = pope_countries } }
+			every_country = {
+				limit = { has_reform = government_reform:papacy_reform }
+				add_to_global_variable_list = { name = pope_countries target = this }
+				#In case we need multiple papacies with antipopes and such
+			}
+		}
 		every_country = {
 			limit = {
 				religion = religion:catholic
@@ -172,6 +180,7 @@ on_siege_lost = {
 	effect = {
 		if = {
 			limit = {
+				in_civil_war = no
 				scope:target = { 
 					has_building = building_type:bey_fortress 
 					NOT = {  has_variable = bey_fortress_siege_timer }
@@ -395,7 +404,10 @@ on_annex = {
 		}
 		if = {
 			limit = { 
-				scope:target = { has_global_variable_list = eligible_beylik_list }
+				is_target_in_global_variable_list = {
+					name = eligible_beylik_list
+					target = scope:target
+				}
 			}
 			remove_list_global_variable = { 
 				name = eligible_beylik_list 
@@ -628,16 +640,26 @@ on_annexed = {
 		}
 		if = { #It's being visited by a treasure fleet, so make the expedition continue
 			limit = {
-				has_variable = being_visited_by_expedition_from
-			}
-			var:being_visited_by_expedition_from = {
-				save_scope_as = expedition_initiator
-				var:chinese_treasure_fleet_location = {
-					var:chinese_expedition_route_deviation_return = {
-						save_scope_as = next_tile
+				scope:target = {
+					has_variable = being_visited_by_expedition_from
+					var:being_visited_by_expedition_from = {
+						has_variable = chinese_treasure_fleet_location
+						var:chinese_treasure_fleet_location = {
+							has_variable = chinese_expedition_route_deviation_return
+						}
 					}
 				}
-				trigger_event_silently = flavor_chi.2003
+			}
+			scope:target = {
+				var:being_visited_by_expedition_from = {
+					save_scope_as = expedition_initiator
+					var:chinese_treasure_fleet_location = {
+						var:chinese_expedition_route_deviation_return = {
+							save_scope_as = next_tile
+						}
+					}
+					trigger_event_silently = flavor_chi.2003
+				}
 			}
 		}
 		if = { #Reduce number of celestial governors if the country annexed is such
@@ -1291,6 +1313,9 @@ on_join_war = {
 			}
 			international_organization:hre = {
 				every_international_organization_member = {
+					limit = {
+						this != root
+					}
 					add_opinion = {
 						modifier = hre_emperor_defends_empire
 						target = root
@@ -1498,9 +1523,10 @@ on_ending_war = {
 			}
 			if = {
 				limit = {
-					scope:war.defender_leader = scope:winner 
+					scope:loser = c:PAP
+					scope:winner = c:TUR
 				}
-				scope:winner = {
+				scope:winner ?= {
 					trigger_event_non_silently = flavor_pap_holy_league.9 #Ottoman event if they win
 				}
 				scope:war = {
@@ -1509,8 +1535,12 @@ on_ending_war = {
 					}
 				}
 			}
-			else = {
-				scope:loser = {
+			else_if = {
+				limit = {
+					scope:loser = c:TUR
+					scope:winner = c:PAP
+				}
+				scope:loser ?= {
 					trigger_event_non_silently = flavor_pap_holy_league.10 #Ottoman event if they lose
 				}
 				scope:war = {
@@ -1746,6 +1776,23 @@ on_war_declared = {
 			set_global_variable = {
 				name = cas_aljubarrota_var
 				value = scope:war
+			}
+		}
+		if = {
+			limit = {
+				country_exists = c:NAP
+				country_exists = c:SIC
+				OR = {
+					scope:actor = c:NAP
+					scope:actor = c:SIC
+				}
+				OR = {
+					scope:recipient = c:NAP
+					scope:recipient = c:SIC
+				}
+			}
+			c:SIC = {
+				remove_variable = sicily_pays_tribute
 			}
 		}
 	}
@@ -2376,7 +2423,12 @@ on_becoming_free = {
 		}
 		if = {
 			limit = { 
-				NOT = { has_global_variable_list = eligible_beylik_list }
+				NOT = {
+					is_target_in_global_variable_list = {
+						name = eligible_beylik_list
+						target = root
+					}
+				}
 				has_reform = government_reform:anatolian_beylik
 			}
 			add_to_global_variable_list = { 
@@ -2447,6 +2499,19 @@ on_dependency_gained = {
 	}
 }
 
+# root = country, scope:overlord = country which created the subject, scope:subject_type = subject type of the created country
+on_subject_created = {
+	effect = {
+		if = {
+			limit = {
+				religion != scope:overlord.religion
+				scope:overlord.modifier:force_convert_created_subjects = yes
+			}
+			change_religion = scope:overlord.religion
+		}
+	}
+}
+
 
 on_reform_change = {
 	events = {
@@ -2463,6 +2528,8 @@ on_government_type_change = {
 		if = {
 			limit = {
 				is_emperor = yes
+				scope:from = government_type:monarchy
+				scope:to != government_type:monarchy
 			}
 			international_organization:hre = {
 				international_organization_remove_special_status = {
@@ -2628,6 +2695,13 @@ on_new_ruler = {
 				limit = { has_character_modifier = bra_false_waldemar }
 				remove_character_modifier = bra_false_waldemar
 			}
+		}
+		if = {
+			limit = {
+				has_variable = favored_heir
+				var:favored_heir = scope:new_ruler
+			}
+			remove_variable = favored_heir
 		}
 	}
 }
@@ -2802,9 +2876,29 @@ on_made_saint = {
 	}
 }
 
+#root = character, scope:estate = estate type
+on_character_estate_change = {
+	effect = {
+		if = {
+			limit = { has_character_modifier = head_of_the_cabinet_modifier }
+			owner = {
+				remove_head_of_cabinet_country_effect = yes
+			}
+			promote_to_head_of_cabinet_effect_apply_country_modifier = yes
+		}
+	}
+}
+
 #root = country, scope:old_religion = old religion
 on_religion_changed = {
 	effect = {
+		#get rid of the excommunication if you have any
+		if = {
+			limit = { is_excommunicated = yes }
+			ruler = {
+				remove_character_modifier = excommunicated
+			}
+		}
 		#miaphysite
 		if = {
 			limit = {
@@ -3336,12 +3430,12 @@ on_location_changed_owner = {
 	effect = {
 		if = {
 			limit = {
-				country_exists = c:PAP
 				scope:loser ?= c:PAP
 				this = location:rome
 				scope:winner.religion = religion:catholic
+				scope:winner != c:ITA
 			}
-			scope:winner = { trigger_event_non_silently = flavor_pap.9000 }
+			scope:winner = { trigger_event_non_silently = flavor_pap.9002 }
 		}
 		if = {
 			limit = {
@@ -3415,12 +3509,18 @@ on_location_changed_owner = {
 		}
 		#Remove Panaqas from foreign locations
 		if = {
-			limit = { has_building = building_type:panaqa_building }
-			destroy_building = "building(building_type:panaqa_building|scope:loser)"
+			limit = { 
+				has_building = building_type:panaqa_building 
+				scope:winner = { modifier:has_panaqas = no }
+			}
+			destroy_building = "building(building_type:panaqa_building|owner)"
 		}
 		if = {
-			limit = { has_building = building_type:bey_fortress }
-			destroy_building = "building(building_type:bey_fortress|scope:loser)"
+			limit = { 
+				has_building = building_type:bey_fortress 
+				scope:winner = { NOT = { culture ?= { has_culture_group = culture_group:turkic_group } } }
+			}
+			destroy_building = "building(building_type:bey_fortress|owner)"
 		}
 		if = {
 			limit = {
@@ -3667,7 +3767,12 @@ on_released_country = {
 		}
 		if = {
 			limit = { 
-				NOT = { has_global_variable_list = eligible_beylik_list }
+				NOT = {
+					is_target_in_global_variable_list = {
+						name = eligible_beylik_list
+						target = root
+					}
+				}
 				has_reform = government_reform:anatolian_beylik
 			}
 			add_to_global_variable_list = { 
@@ -4322,4 +4427,20 @@ on_policy_changed = {
 
 #root = international_organization
 on_international_organization_policy_changed = {
+}
+
+#root = country, scope:old_rank = country's old rank
+on_country_rank_change = {
+	effect = {
+		if = {
+			limit = { 
+				country_rank_level = 4 
+				NOT = { has_variable = recently_became_empire_variable }
+			}
+			set_variable = {
+				name = recently_became_empire_variable
+				years = 15
+			}
+		}
+	}
 }

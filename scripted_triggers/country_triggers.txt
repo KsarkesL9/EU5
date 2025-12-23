@@ -178,12 +178,6 @@ alliance_can_exist = {
 	}
 }
 
-can_create_subjects = {
-	at_war = no
-	modifier:allow_subjects = yes
-	modifier:blocked_from_creating_subjects = no
-}
-
 
 can_change_primary_culture = {
 	$country$ = {
@@ -1150,7 +1144,15 @@ military_order_can_declare_wars_trigger = {
 				NOT = { exists = scope:defender }
 				scope:defender = {
 					is_neighbor_of = scope:attacker
-					religion.group != scope:attacker.religion.group
+					religion ?= {
+						OR = {
+							NOT = { group = scope:attacker.religion.group }
+							reverse_religious_view = {
+								target = scope:attacker.religion
+								value <= negative
+							}
+						}					
+					}
 				}
 			}
 		}
@@ -1166,5 +1168,66 @@ colonial_nation_can_declare_wars_trigger = {
 				capital.continent = scope:attacker.capital.continent
 			}
 		}
+	}
+}
+
+has_compatible_heir_religion_law_with = {
+	custom_description = {
+		text = has_compatible_heir_religion_law_with_text
+		object = $country$
+		has_law = heir_religion_law
+		NOT = { has_policy = heir_special_succession }
+		"law_policy(law:heir_religion_law)" ?= { NOT = { is_locked_for = prev } }
+		trigger_if = {
+			limit = { religion = $country$.religion }
+			has_policy = heir_same_religion
+		}
+		trigger_else_if = {
+			limit = { religion.group = $country$.religion.group }
+			has_policy = heir_same_religion_group
+		}
+		trigger_else = {
+			has_policy = heir_any_religion
+		}
+	}
+}
+
+can_adopt_compatible_religion_law = {
+	custom_description = {
+		text = can_adopt_compatible_religion_law_text
+		object = $country$
+		OR = {
+			NOT = { has_law = heir_religion_law }
+			"law_policy(law:heir_religion_law)" = { NOT = { is_locked_for = prev } }
+		}
+		trigger_if = {
+			limit = { religion = $country$.religion }
+			OR = {
+				has_policy = heir_same_religion
+				policy:heir_same_religion = { is_available_for = prev }
+			}
+		}
+		trigger_else_if = {
+			limit = { religion.group = $country$.religion.group }
+			OR = {
+				has_policy = heir_same_religion_group
+				policy:heir_same_religion_group = { is_available_for = prev }
+			}
+		}
+		trigger_else = {
+			OR = {
+				has_policy = heir_any_religion
+				policy:heir_any_religion = { is_available_for = prev }
+			}
+		}
+	}
+}
+
+#root = country
+peaceful_and_rich = {
+	at_war = no
+	gold >= {
+		value = monthly_income_trade_and_tax
+		multiply = 2
 	}
 }

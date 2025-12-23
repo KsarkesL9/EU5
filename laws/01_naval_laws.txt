@@ -11,6 +11,7 @@ maritime_law = {
 	forestry_ordinance = {
 		country_modifier = {
 			global_naval_supplies_output_modifier = 0.10
+			monthly_towards_traditional_economy = societal_value_minor_monthly_move
 		}
 		estate_preferences = {
 			burghers_estate
@@ -21,6 +22,7 @@ maritime_law = {
 	mandatory_impressment = {
 		country_modifier = {
 			global_sailors_modifier = 0.10
+			monthly_towards_serfdom = societal_value_minor_monthly_move
 		}
 		estate_preferences = {
 			nobles_estate
@@ -31,6 +33,7 @@ maritime_law = {
 	navy_audits = {
 		country_modifier = {
 			navy_maintenance_cost = -0.05
+			monthly_towards_naval = societal_value_minor_monthly_move
 		}
 		estate_preferences = {
 			peasants_estate
@@ -42,6 +45,7 @@ maritime_law = {
 	  	country_modifier = {
 			burghers_estate_target_satisfaction = small_permanent_target_satisfaction
 			trade_range_modifier = 0.10
+			monthly_towards_free_trade = societal_value_minor_monthly_move
 		}
 		estate_preferences = {
 			burghers_estate
@@ -52,6 +56,7 @@ maritime_law = {
 	shipwright_standard_regulation = {
 		country_modifier = {
 			ship_build_speed = 0.10
+			monthly_towards_capital_economy = societal_value_minor_monthly_move
 		}
 		estate_preferences = {
 			burghers_estate
@@ -60,9 +65,10 @@ maritime_law = {
 	}
 
 	#Country Specific
-	ara_consulate_sea = {		
+	ara_consulate_sea = {	
+		unique = yes	
     	potential = {
-			tag = ARA
+			has_or_had_tag = ARA
 			has_unlocked_policy_trigger = { type = ara_consulate_sea }
 		}
 		country_modifier = {
@@ -77,9 +83,9 @@ maritime_law = {
 	}
 
 	nav_maritime_code = {
-		
+		unique = yes
     	potential = {
-			tag = NAV
+			has_or_had_tag = NAV
 		}
     	allow = {
 			
@@ -97,9 +103,9 @@ maritime_law = {
 	}
 
 	kilwan_merchant_navy = {
-		
+		unique = yes
 		potential = {
-			tag = ZAN
+			has_or_had_tag = ZAN
 		}
 
 		country_modifier = {
@@ -156,8 +162,8 @@ piracy_law = {
 				text = has_state_piracy_policy_access
 				OR = {
 					has_unlocked_policy_trigger = { type = state_piracy_policy }
-					tag = KNI
-					tag = TUR 
+					has_or_had_tag = KNI
+					has_or_had_tag = TUR 
 					has_advance = privateers
 					has_advance = letters_of_marque
 					has_reform = government_reform:galley_lords_reform
@@ -252,7 +258,7 @@ piracy_law = {
 		}
 		country_modifier = {
 			can_hire_privateers = yes
-			ship_capture_chance = 0.1
+			ship_capture_chance = 0.025
 		}
 		estate_preferences = {
 			nobles_estate
@@ -306,7 +312,7 @@ naval_doctrine_law = {
 
 	ship_boarding = {
 		country_modifier = {
-			ship_capture_chance = 0.33
+			ship_capture_chance = 0.05
 			navy_tradition_from_battle = 0.5
 		}
 		estate_preferences = {
@@ -318,10 +324,11 @@ naval_doctrine_law = {
 
 
 	wooden_wall = {
+		unique = yes
         potential = {
 			OR = {
-				tag = ENG
-				tag = GBR
+				has_or_had_tag = ENG
+				has_or_had_tag = GBR
 			}
 		}
 
@@ -337,11 +344,12 @@ naval_doctrine_law = {
 	}
 
 	grand_armada = {
+		unique = yes
 		potential = {
 			OR = {
-				tag = CAS
+				has_or_had_tag = CAS
 				AND = {
-					tag = SPA
+					has_or_had_tag = SPA
 					culture = culture:castilian
 				}
 			}
@@ -360,11 +368,12 @@ naval_doctrine_law = {
 	}
 
 	portuguese_marines = {
+		unique = yes
 		potential = {
 			OR = {
-				tag = POR
+				has_or_had_tag = POR
 				AND = {
-					tag = SPA
+					has_or_had_tag = SPA
 					culture = culture:portuguese
 				}
 			}
@@ -384,10 +393,10 @@ naval_doctrine_law = {
 	ordinance_sea = {
 		potential = {
 			OR = {
-				tag = ARA
+				has_or_had_tag = ARA
 				culture = culture:catalan
 				AND = {
-					tag = SPA
+					has_or_had_tag = SPA
 					OR = {
 						culture = culture:aragonese
 						culture = culture:catalan
@@ -407,8 +416,9 @@ naval_doctrine_law = {
 	}
 
 	danish_admirality = {
+		unique = yes
 		potential = {
-			tag = DAN
+			has_or_had_tag = DAN
 		}
 		country_modifier = {
 			monthly_navy_tradition = 0.05
@@ -420,8 +430,9 @@ naval_doctrine_law = {
 	}
 
 	norwegian_sailors = {
+		unique = yes
 		potential = {
-			tag = NOR
+			has_or_had_tag = NOR
 		}
 
 		country_modifier = {
@@ -434,8 +445,9 @@ naval_doctrine_law = {
 	}
 
 	venetian_galleys = {
+		unique = yes
 		potential = {
-			tag = VEN
+			has_or_had_tag = VEN
 		}
 
 		country_modifier = {
@@ -465,8 +477,9 @@ naval_doctrine_law = {
 
 
 	dutch_trade_fleet = {
+		unique = yes
 		potential = {
-			tag = NED
+			has_or_had_tag = NED
 		}
 
 		country_modifier = {
@@ -483,7 +496,7 @@ naval_doctrine_law = {
 		potential = {
 			OR = {
 				culture = culture:basque
-				tag = NAV
+				has_or_had_tag = NAV
 			}
 		}
 

@@ -3,7 +3,7 @@
 	#https://en.wikipedia.org/wiki/Columbian_exchange#Of_diseases
 	#https://en.wikipedia.org/wiki/Native_American_disease_and_epidemics
 	monthly_spawn_chance = monthly_spawn_chance_unique
-
+	hint_tag = hint_great_pestilence
 	can_start = {
 		disease_is_active = disease:great_pestilence
 	}
@@ -96,6 +96,7 @@
 			}
 			remove_country_modifier = no_contact_with_outsiders
 			remove_country_modifier = procure_remedies
+			remove_country_modifier = procure_remedies_cost
 			remove_country_modifier = segregate_the_infected
 			remove_country_modifier = blame_the_minorities
 			remove_country_modifier = sponsor_spiritual_protection_bonus

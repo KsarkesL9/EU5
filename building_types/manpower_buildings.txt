@@ -19,7 +19,7 @@
 		government_type = government_type:monarchy 
 	}
 	remove_if = {
-		location = { is_capital = no }
+		is_no_longer_capital = yes
 	}
 	
 	capital_modifier = {
@@ -352,7 +352,10 @@ thema_headquarters = {
 		modifier:allow_thema_headquarters = yes
 	}
 
-	allow = { is_province_capital = yes }
+	allow = { 
+		is_province_capital = yes 
+		owner = { modifier:allow_thema_headquarters = yes }
+	}
 	
 	location_potential = { is_capital = no }
 
@@ -395,7 +398,7 @@ city_guard = {
 		government_type = government_type:republic 
 	}
 	remove_if = {
-		location = { is_capital = no }
+		is_no_longer_capital = yes
 	}
 	
 	capital_modifier = {

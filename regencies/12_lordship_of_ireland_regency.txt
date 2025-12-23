@@ -1,20 +1,13 @@
 ﻿lordship_of_ireland_regency = {	
 	allow = {
-		is_member_of_international_organization = international_organization:lordship_of_ireland
-		international_organization:lordship_of_ireland ?= {
-			leader_country ?= {
-				ruler ?= {
-					can_become_a_regent = yes
-					is_eligible_heir = root
-				}
-			}
-		}
+		always = no
 	}
 	
 	modifier = {
 	}
 	
 	start_effect = {
-		#The effects of this regency is handled via the lordship_of_ireland_assert_regency country_interaction
+
+		set_regent = international_organization:lordship_of_ireland.leader_country.ruler 
 	}	
 }

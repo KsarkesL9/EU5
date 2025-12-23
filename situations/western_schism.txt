@@ -1,5 +1,6 @@
 ﻿western_schism = {
 	monthly_spawn_chance = monthly_spawn_chance_ultimate_high
+	hint_tag = hint_western_schism
 	resolution = "western_schism_resolution"
 	international_organization_type = catholic_church
 	
@@ -77,7 +78,7 @@
 					limit = {
 						save_temporary_scope_as = voter
 						international_organization:catholic_church = {
-							"active_resolution(resolution:western_schism_resolution)" = {
+							"active_resolution(resolution:western_schism_resolution)" ?= {
 								not = {
 									exists = "vote_in_active_resolution(scope:voter)"
 								}
@@ -170,7 +171,7 @@
 				}
 			}
 			international_organization:catholic_church = {
-				"active_resolution(resolution:western_schism_resolution)" = {
+				"active_resolution(resolution:western_schism_resolution)" ?= {
 					save_temporary_scope_as = resolution
 					every_voter = {
 						save_temporary_scope_as = voter

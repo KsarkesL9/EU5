@@ -13,6 +13,7 @@ hun_castle_warriors = {
 	age = age_1_traditions
 	
 	requires = hun_composite_light_cavalry
+	levy_recovery_modifier = 0.1
 	global_levy_recruitment_speed_modifier = 0.33
 }
 
@@ -32,7 +33,7 @@ hun_renaissance_knowledge = {
 	age = age_2_renaissance
 	
 	artist_salary_modifier = -0.2
-	peasants_estate_target_satisfaction = small_permanent_target_satisfaction
+	global_institution_growth_modifier = 0.2
 	
 	requires = patron_of_art
 }
